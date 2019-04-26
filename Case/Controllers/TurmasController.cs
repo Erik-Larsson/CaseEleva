@@ -10,107 +10,112 @@ using Case;
 
 namespace Case.Controllers
 {
-    public class EscolasController : Controller
+    public class TurmasController : Controller
     {
         private Models db = new Models();
 
-        // GET: Escolas
+        // GET: Turmas
         public ActionResult Index()
         {
-            return View(db.Escola.ToList());
+            var turma = db.Turma.Include(t => t.Escola);
+            return View(turma.ToList());
         }
 
-        // GET: Escolas/Details/5
+        // GET: Turmas/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Escola escola = db.Escola.Find(id);
-            if (escola == null)
+            Turma turma = db.Turma.Find(id);
+            if (turma == null)
             {
                 return HttpNotFound();
             }
-            return View(escola);
+            return View(turma);
         }
 
-        // GET: Escolas/Create
+        // GET: Turmas/Create
         public ActionResult Create()
         {
+            ViewBag.id_escola = new SelectList(db.Escola, "id_escola", "nome_escola");
             return View();
         }
 
-        // POST: Escolas/Create
+        // POST: Turmas/Create
         // Para se proteger de mais ataques, ative as propriedades específicas a que você quer se conectar. Para 
         // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id_escola,nome_escola")] Escola escola)
+        public ActionResult Create([Bind(Include = "id_turma,id_escola,nome_turma")] Turma turma)
         {
             if (ModelState.IsValid)
             {
-                db.Escola.Add(escola);
+                db.Turma.Add(turma);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(escola);
+            ViewBag.id_escola = new SelectList(db.Escola, "id_escola", "nome_escola", turma.id_escola);
+            return View(turma);
         }
 
-        // GET: Escolas/Edit/5
+        // GET: Turmas/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Escola escola = db.Escola.Find(id);
-            if (escola == null)
+            Turma turma = db.Turma.Find(id);
+            if (turma == null)
             {
                 return HttpNotFound();
             }
-            return View(escola);
+            ViewBag.id_escola = new SelectList(db.Escola, "id_escola", "nome_escola", turma.id_escola);
+            return View(turma);
         }
 
-        // POST: Escolas/Edit/5
+        // POST: Turmas/Edit/5
         // Para se proteger de mais ataques, ative as propriedades específicas a que você quer se conectar. Para 
         // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id_escola,nome_escola")] Escola escola)
+        public ActionResult Edit([Bind(Include = "id_turma,id_escola,nome_turma")] Turma turma)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(escola).State = EntityState.Modified;
+                db.Entry(turma).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(escola);
+            ViewBag.id_escola = new SelectList(db.Escola, "id_escola", "nome_escola", turma.id_escola);
+            return View(turma);
         }
 
-        // GET: Escolas/Delete/5
+        // GET: Turmas/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Escola escola = db.Escola.Find(id);
-            if (escola == null)
+            Turma turma = db.Turma.Find(id);
+            if (turma == null)
             {
                 return HttpNotFound();
             }
-            return View(escola);
+            return View(turma);
         }
 
-        // POST: Escolas/Delete/5
+        // POST: Turmas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Escola escola = db.Escola.Find(id);
-            db.Escola.Remove(escola);
+            Turma turma = db.Turma.Find(id);
+            db.Turma.Remove(turma);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
