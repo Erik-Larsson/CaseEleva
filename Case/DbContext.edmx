@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="EscolaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Escola">
+          <Key>
+            <PropertyRef Name="id_escola" />
+          </Key>
+          <Property Name="id_escola" Type="int" Nullable="false" />
+          <Property Name="nome_escola" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Turma">
+          <Key>
+            <PropertyRef Name="id_turma" />
+          </Key>
+          <Property Name="id_turma" Type="int" Nullable="false" />
+          <Property Name="id_escola" Type="int" Nullable="false" />
+          <Property Name="nome_turma" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <Association Name="fk_escola">
+          <End Role="Escola" Type="Self.Escola" Multiplicity="1" />
+          <End Role="Turma" Type="Self.Turma" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Escola">
+              <PropertyRef Name="id_escola" />
+            </Principal>
+            <Dependent Role="Turma">
+              <PropertyRef Name="id_escola" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EscolaModelStoreContainer">
+          <EntitySet Name="Escola" EntityType="Self.Escola" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Turma" EntityType="Self.Turma" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_escola" Association="Self.fk_escola">
+            <End Role="Escola" EntitySet="Escola" />
+            <End Role="Turma" EntitySet="Turma" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EscolaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Escola">
+          <Key>
+            <PropertyRef Name="id_escola" />
+          </Key>
+          <Property Name="id_escola" Type="Int32" Nullable="false" />
+          <Property Name="nome_escola" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Turma" Relationship="Self.fk_escola" FromRole="Escola" ToRole="Turma" />
+        </EntityType>
+        <EntityType Name="Turma">
+          <Key>
+            <PropertyRef Name="id_turma" />
+          </Key>
+          <Property Name="id_turma" Type="Int32" Nullable="false" />
+          <Property Name="id_escola" Type="Int32" Nullable="false" />
+          <Property Name="nome_turma" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Escola" Relationship="Self.fk_escola" FromRole="Turma" ToRole="Escola" />
+        </EntityType>
+        <Association Name="fk_escola">
+          <End Role="Escola" Type="Self.Escola" Multiplicity="1" />
+          <End Role="Turma" Type="Self.Turma" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Escola">
+              <PropertyRef Name="id_escola" />
+            </Principal>
+            <Dependent Role="Turma">
+              <PropertyRef Name="id_escola" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EscolaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Escola" EntityType="Self.Escola" />
+          <EntitySet Name="Turma" EntityType="Self.Turma" />
+          <AssociationSet Name="fk_escola" Association="Self.fk_escola">
+            <End Role="Escola" EntitySet="Escola" />
+            <End Role="Turma" EntitySet="Turma" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EscolaModelStoreContainer" CdmEntityContainer="EscolaEntities">
+          <EntitySetMapping Name="Escola">
+            <EntityTypeMapping TypeName="EscolaModel.Escola">
+              <MappingFragment StoreEntitySet="Escola">
+                <ScalarProperty Name="id_escola" ColumnName="id_escola" />
+                <ScalarProperty Name="nome_escola" ColumnName="nome_escola" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Turma">
+            <EntityTypeMapping TypeName="EscolaModel.Turma">
+              <MappingFragment StoreEntitySet="Turma">
+                <ScalarProperty Name="id_turma" ColumnName="id_turma" />
+                <ScalarProperty Name="id_escola" ColumnName="id_escola" />
+                <ScalarProperty Name="nome_turma" ColumnName="nome_turma" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
