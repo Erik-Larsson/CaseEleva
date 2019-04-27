@@ -2,11 +2,13 @@ namespace Case
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel;
+	using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+	using System.Runtime.Serialization;
 
-    [Table("Escola")]
+	[Table("Escola")]
     public partial class Escola
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,7 +22,8 @@ namespace Case
         public int id_escola { get; set; }
 
         [StringLength(200)]
-        public string nome_escola { get; set; }
+		[DisplayName("Escola")]
+		public string nome_escola { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Turma> Turma { get; set; }

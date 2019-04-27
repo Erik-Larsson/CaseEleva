@@ -48,7 +48,7 @@ namespace Case.Controllers
         // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id_turma,id_escola,nome_turma")] Turma turma)
+        public ActionResult Create([Bind(Include = "id_escola,nome_turma")] Turma turma)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +82,7 @@ namespace Case.Controllers
         // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id_turma,id_escola,nome_turma")] Turma turma)
+        public ActionResult Edit([Bind(Include = "id_escola,nome_turma")] Turma turma)
         {
             if (ModelState.IsValid)
             {
