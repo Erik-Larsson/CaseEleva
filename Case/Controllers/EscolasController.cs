@@ -12,11 +12,14 @@ namespace Case.Controllers
 {
     public class EscolasController : Controller
     {
-        private Models db = new Models();
+        private Context db = new Context();
 
         // GET: Escolas
         public ActionResult Index()
         {
+			var esc = new Escola();
+			ViewBag.Escola = esc;
+			ViewData["Escola"] = esc;
             return View(db.Escola.ToList());
         }
 
@@ -58,20 +61,23 @@ namespace Case.Controllers
             return View(escola);
         }
 
-        // GET: Escolas/Edit/5
-        public ActionResult Edit(int? id)
+		// GET: Escolas/Edit/5
+		[HttpGet]
+		public ActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Escola escola = db.Escola.Find(id);
-            if (escola == null)
-            {
-                return HttpNotFound();
-            }
-            return View(escola);
-        }
+			var model = new Escola();
+			return PartialView(model);
+			//if (id == null)
+			//{
+			//    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			//}
+			//Escola escola = db.Escola.Find(id);
+			//if (escola == null)
+			//{
+			//    return HttpNotFound();
+			//}
+			//return View(escola);
+		}
 
         // POST: Escolas/Edit/5
         // Para se proteger de mais ataques, ative as propriedades específicas a que você quer se conectar. Para 

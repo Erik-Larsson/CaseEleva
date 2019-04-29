@@ -5,9 +5,9 @@ namespace Case
 	using System.ComponentModel.DataAnnotations.Schema;
 	using System.Linq;
 
-	public partial class Models : DbContext
+	public partial class Context : DbContext
 	{
-		public Models()
+		public Context()
 			: base("name=Models")
 		{
 		}

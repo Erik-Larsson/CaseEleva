@@ -12,7 +12,7 @@ namespace Case.Controllers
 {
     public class TurmasController : Controller
     {
-        private Models db = new Models();
+        private Context db = new Context();
 
         // GET: Turmas
         public ActionResult Index()

@@ -1,43 +1,90 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Meu Aplicativo ASP.NET</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title Eleva</title>
+	@Styles.Render("~/Content/css")
+	@Scripts.Render("~/bundles/modernizr")
+	<!-- Polyfill(s) for older browsers -->
+	<script src="/node_modules/core-js/client/shim.min.js"></script>
+
+	<script src="/node_modules/zone.js/dist/zone.js"></script>
+	<script src="/node_modules/systemjs/dist/system.src.js"></script>
+
+	<script src="/systemjs.config.js"></script>
+	<script>
+		System.import('app/main.js').catch(function (err) { console.error(err); });
+
+	</script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+		   $('#showEdit').click(function() {
+			   var url = $('#editModal').data('url');
+
+				$.get(url, function(data) {
+					$('#editContainer').html(data);
+
+					$('#editModal').modal('show');
+				});
+		   });
+		});
+		$(document).ready(function () {
+			// Activate tooltip
+			$('[data-toggle="tooltip"]').tooltip();
+
+			// Select/Deselect checkboxes
+			var checkbox = $('table tbody input[type="checkbox"]');
+			$("#selectAll").click(function () {
+				if (this.checked) {
+					checkbox.each(function () {
+						this.checked = true;
+					});
+				} else {
+					checkbox.each(function () {
+						this.checked = false;
+					});
+				}
+			});
+			checkbox.click(function () {
+				if (!this.checked) {
+					$("#selectAll").prop("checked", false);
+				}
+			});
+		});
+	</script>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Nome do aplicativo", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				@Html.ActionLink("Controle de Turmas e Escolas", "Index", "Escolas", new { area = "" }, new { @class = "navbar-brand" })
+			</div>
+			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li>@Html.ActionLink("Início", "Index", "Home")</li>
 					<li>@Html.ActionLink("Escolas", "Index", "Escolas")</li>
 					<li>@Html.ActionLink("Turmas", "Index", "Turmas")</li>
 				</ul>
-            </div>
-        </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Meu Aplicativo ASP.NET</p>
-        </footer>
-    </div>
+			</div>
+		</div>
+	</div>
+	<div class="container body-content">
+		@RenderBody()
+		<hr />
+		<footer>
+			<p>@DateTime.Now.Year - Case Eleva</p>
+		</footer>
+	</div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+	@Scripts.Render("~/bundles/jquery")
+	@Scripts.Render("~/bundles/bootstrap")
+	@RenderSection("scripts", required: false)
 </body>
 </html>
