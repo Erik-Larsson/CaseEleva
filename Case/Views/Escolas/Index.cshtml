@@ -34,8 +34,20 @@
 							<label for="selectAll"></label>
 						</span>
 					</th>
-					<th class="col-sm-9">
+					<th class="col-sm-2">
 						@Html.ActionLink("Escola", "Index", new { sortOrder = ViewBag.EscolaSort, currentFilter = ViewBag.CurrentFilter })
+					</th>
+					<th class="col-sm-2">
+						@Html.ActionLink("Pais", "Index", new { sortOrder = ViewBag.PaisSort, currentFilter = ViewBag.CurrentFilter })
+					</th>
+					<th class="col-sm-2">
+						@Html.ActionLink("Estado", "Index", new { sortOrder = ViewBag.EstadoSort, currentFilter = ViewBag.CurrentFilter })
+					</th>
+					<th class="col-sm-2">
+						@Html.ActionLink("Cidade", "Index", new { sortOrder = ViewBag.CidadeSort, currentFilter = ViewBag.CurrentFilter })
+					</th>
+					<th class="col-sm-2">
+						@Html.ActionLink("Endereço", "Index", new { sortOrder = ViewBag.EnderecoSort, currentFilter = ViewBag.CurrentFilter })
 					</th>
 					<th class="col-sm-2">Actions</th>
 				</tr>
@@ -43,21 +55,33 @@
 			<tbody>
 				@foreach (var item in Model)
 				{
-					<tr>
-						<td class="col-sm-1">
-							<span class="custom-checkbox">
-								<input type="checkbox" id="checkboxes" name="optionsEscola[]" class="checkboxes" value="@item.id_escola">
-								<label for="checkboxes"></label>
-							</span>
-						</td>
-						<td class="col-sm-9">
-							@Html.DisplayFor(modelItem => item.nome_escola)
-						</td>
-						<td class="col-sm-2">
-							@Html.ActionLink("Editar", "Edit", new { id = item.id_escola }, new { id = "showEdit", data_target = "#editEscolaModal", @class = "edit", data_toggle = "modal" })<a><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-							@Html.ActionLink("Excluir", "Delete", new { id = item.id_escola }, new { id = "showDelete", data_target = "#deleteEscolaModal", @class = "delete", data_toggle = "modal" })<a><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-						</td>
-					</tr>
+				<tr>
+					<td class="col-sm-1">
+						<span class="custom-checkbox">
+							<input type="checkbox" id="checkboxes" name="optionsEscola[]" class="checkboxes" value="@item.id_escola">
+							<label for="checkboxes"></label>
+						</span>
+					</td>
+					<td class="col-sm-2">
+						@Html.DisplayFor(modelItem => item.nome_escola)
+					</td>
+					<td class="col-sm-2">
+						@Html.DisplayFor(modelItem => item.Pais)
+					</td>	
+					<td class="col-sm-2">
+						@Html.DisplayFor(modelItem => item.Estado)
+					</td>
+					<td class="col-sm-2">
+						@Html.DisplayFor(modelItem => item.Cidade)
+					</td>
+					<td class="col-sm-2">
+						@Html.DisplayFor(modelItem => item.Endereco)
+					</td>
+					<td class="col-sm-2">
+						@Html.ActionLink("Editar", "Edit", new { id = item.id_escola }, new { id = "showEdit", data_target = "#editEscolaModal", @class = "edit", data_toggle = "modal" })@*<a><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>*@
+						@Html.ActionLink("Excluir", "Delete", new { id = item.id_escola }, new { id = "showDelete", data_target = "#deleteEscolaModal", @class = "delete", data_toggle = "modal" })@*<a><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>*@
+					</td>
+				</tr>
 				}
 			</tbody>
 		</table>

@@ -22,6 +22,8 @@ namespace Case.Controllers
 			ViewBag.CurrentSort = sortOrder;
 			ViewBag.TurmaSort = String.IsNullOrEmpty(sortOrder) ? "id_escola" : "";
 			ViewBag.EscolaSort = String.IsNullOrEmpty(sortOrder) ? "nome_escola" : "";
+			ViewBag.QtdAlunosSort = String.IsNullOrEmpty(sortOrder) ? "Quantidade_Alunos" : "";
+			ViewBag.QtdProfessores = String.IsNullOrEmpty(sortOrder) ? "QtdProfessoresSort" : "";
 
 			if (searchString != null)
 			{
@@ -48,6 +50,12 @@ namespace Case.Controllers
 				case "id_escola":
 					turma = turma.OrderByDescending(s => s.Escola.nome_escola);
 					break;
+				case "Quantidade_Alunos":
+					turma = turma.OrderByDescending(s => s.Quantidade_Alunos);
+					break;
+				case "Quantidade_Professores":
+					turma = turma.OrderByDescending(s => s.Quantidade_Professores);
+					break;
 				default:  // Name ascending 
 					turma = turma.OrderBy(s => s.id_turma);
 					break;
@@ -71,7 +79,7 @@ namespace Case.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id_turma, id_escola,nome_turma")] Turma turma)
+        public ActionResult Create([Bind(Include = "id_turma, id_escola,nome_turma,Quantidade_Alunos, Quantidade_Professores")] Turma turma)
         {
             if (ModelState.IsValid)
             {
@@ -101,7 +109,7 @@ namespace Case.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id_turma,id_escola,nome_turma")] Turma turma)
+        public ActionResult Edit([Bind(Include = "id_turma,id_escola,nome_turma,Quantidade_Alunos, Quantidade_Professores")] Turma turma)
         {
             if (ModelState.IsValid)
             {

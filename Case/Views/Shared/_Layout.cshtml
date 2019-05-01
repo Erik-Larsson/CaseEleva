@@ -90,6 +90,25 @@
 		});
 	});
 	$(document).ready(function () {
+
+		$('#addEscolaModal').on('hidden.bs.modal', function () {
+			location.reload();
+		})
+		$('#editEscolaModal').on('hidden.bs.modal', function () {
+			location.reload();
+		})
+		$('#deleteEscolaModal').on('hidden.bs.modal', function () {
+			location.reload();
+		})
+		$('#addTurmaModal').on('hidden.bs.modal', function () {
+			location.reload();
+		})
+		$('#editTurmaModal').on('hidden.bs.modal', function () {
+			location.reload();
+		})
+		$('#deleteTurmaModal').on('hidden.bs.modal', function () {
+			location.reload();
+		})
 		// Activate tooltip
 		$('[data-toggle="tooltip"]').tooltip();
 
@@ -145,7 +164,6 @@
 				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 				data: { dataJson: JSON.stringify(valuesEscola) },
 				success: setTimeout(function () {
-					alert('Success');
 					location.reload();
 				})
 			});

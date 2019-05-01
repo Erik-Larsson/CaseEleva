@@ -20,6 +20,10 @@ namespace Case.Controllers
         {
 			ViewBag.CurrentSort = sortOrder;
 			ViewBag.EscolaSort = String.IsNullOrEmpty(sortOrder) ? "id_escola" : "";
+			ViewBag.PaisSort = String.IsNullOrEmpty(sortOrder) ? "pais" : "";
+			ViewBag.EstadoSort = String.IsNullOrEmpty(sortOrder) ? "estado" : "";
+			ViewBag.CidadeSort = String.IsNullOrEmpty(sortOrder) ? "cidade" : "";
+			ViewBag.EnderecoSort = String.IsNullOrEmpty(sortOrder) ? "endereco" : "";
 
 			if (searchString != null)
 			{
@@ -31,7 +35,6 @@ namespace Case.Controllers
 			}
 
 			ViewBag.CurrentFilter = searchString;
-
 			var escola = from s in db.Escola
 						select s;
 			if (!String.IsNullOrEmpty(searchString))
@@ -42,6 +45,18 @@ namespace Case.Controllers
 			{
 				case "nome_escola":
 					escola = escola.OrderByDescending(s => s.nome_escola);
+					break;
+				case "pais":
+					escola = escola.OrderByDescending(s => s.Pais);
+					break;
+				case "estado":
+					escola = escola.OrderByDescending(s => s.Estado);
+					break;
+				case "cidade":
+					escola = escola.OrderByDescending(s => s.Cidade);
+					break;
+				case "endereco":
+					escola = escola.OrderByDescending(s => s.Endereco);
 					break;
 				default:  // Name ascending 
 					escola = escola.OrderBy(s => s.id_escola);
@@ -67,7 +82,7 @@ namespace Case.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id_escola, nome_escola")] Escola escola)
+        public ActionResult Create([Bind(Include = "id_escola, nome_escola,pais,estado,cidade,endereco")] Escola escola)
         {
             if (ModelState.IsValid)
             {
@@ -97,7 +112,7 @@ namespace Case.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id_escola, nome_escola")] Escola escola)
+        public ActionResult Edit([Bind(Include = "id_escola, nome_escola,pais,estado,cidade,endereco")] Escola escola)
         {
             if (ModelState.IsValid)
             {

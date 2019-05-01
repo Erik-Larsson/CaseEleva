@@ -29,6 +29,7 @@ namespace Case
 			modelBuilder.Entity<Turma>()
 				.Property(e => e.nome_turma)
 				.IsUnicode(false);
+
 		}
 	}
 }

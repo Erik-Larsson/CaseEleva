@@ -25,7 +25,21 @@ namespace Case
 		[DisplayName("Escola")]
 		public string nome_escola { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+		[StringLength(200)]
+		[DisplayName("Endereço")]
+		public string Endereco { get; set; }
+
+		[StringLength(200)]
+		[DisplayName("Cidade")]
+		public string Cidade { get; set; }
+
+		[DisplayName("Estado")]
+		public string Estado { get; set; }
+
+		[DisplayName("País")]
+		public string Pais { get; set; }
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Turma> Turma { get; set; }
     }
 }

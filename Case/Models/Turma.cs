@@ -21,6 +21,12 @@ namespace Case
 		[DisplayName("Turma")]
 		public string nome_turma { get; set; }
 
-        public virtual Escola Escola { get; set; }
+		[DisplayName("Alunos")]
+		public int? Quantidade_Alunos { get; set; }
+
+		[DisplayName("Professores")]
+		public int? Quantidade_Professores { get; set; }
+
+		public virtual Escola Escola { get; set; }
     }
 }

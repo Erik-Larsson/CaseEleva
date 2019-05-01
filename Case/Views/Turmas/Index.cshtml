@@ -13,9 +13,8 @@
 					<h2>Gerenciar <b>Turmas</b></h2>
 				</div>
 				<div class="col-sm-6">
-					@Html.ActionLink("Adicionar Turma", "Create", null, new { id = "showCreateTurma", data_target = "#addEscolaModal", @class = "create btn btn-success", data_toggle = "modal" })
+					@Html.ActionLink("Adicionar Turma", "Create", null, new { id = "showCreateTurma", data_target = "#addTurmaModal", @class = "create btn btn-success", data_toggle = "modal" })
 					<button id="showDeleteListTurma" class="btn btn-danger">Excluir</button>
-					@*@Html.ActionLink("Excluir Selecionados", "MultipleDelete", null, new { id = "showDeleteListTurma", data_target = "#multipleDeleteEmployeeModal", @class = "delete btn btn-danger", data_toggle = "modal" })*@
 				</div>
 			</div>
 		</div>
@@ -35,53 +34,53 @@
 							<label for="selectAll"></label>
 						</span>
 					</th>
-					<th class="col-sm-4">
+					<th class="col-sm-3">
 						@Html.ActionLink("Turma", "Index", new { sortOrder = ViewBag.TurmaSort, currentFilter = ViewBag.CurrentFilter })
 					</th>
-					<th class="col-sm-4">
+					<th class="col-sm-3">
 						@Html.ActionLink("Escola", "Index", new { sortOrder = ViewBag.EscolaSort, currentFilter = ViewBag.CurrentFilter })
 					</th>
-					<th class="col-sm-1"><a href="#">Actions</a></th>
+					<th class="col-sm-3">
+						@Html.ActionLink("Quantidade Alunos", "Index", new { sortOrder = ViewBag.QtdAlunosSort, currentFilter = ViewBag.CurrentFilter })
+					</th>
+					<th class="col-sm-3">
+						@Html.ActionLink("Quantidade Professores", "Index", new { sortOrder = ViewBag.QtdProfessoresSort, currentFilter = ViewBag.CurrentFilter })
+					</th>
+					<th class="col-sm-2"><a href="#">Actions</a></th>
 				</tr>
 			</thead>
 			<tbody>
 				@foreach (var item in Model)
 				{
-					<tr>
-						<td class="col-sm-1">
-							<span class="custom-checkbox">
-								<input type="checkbox" id="checkboxes" name="optionsTurma[]" class="checkboxes" value="@item.id_turma">
-								<label for="checkboxes"></label>
-							</span>
-						</td>
-						<td class="col-sm-4">
-							@Html.DisplayFor(modalItem => item.Escola.nome_escola)
-						</td>
-						<td class="col-sm-4">
-							@Html.DisplayFor(modelItem => item.nome_turma)
-						</td>
-						<td class="col-sm-2">
-							@*<a id="showEdit" href="#editEmployeeModal" data-toggle="modal" class="edit" ></a>*@
-							@Html.ActionLink("Editar", "Edit", new { id = item.id_turma }, new { id = "showEditTurma", data_target = "#editTurmaModal", @class = "edit", data_toggle = "modal" })<a><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-							@Html.ActionLink("Excluir", "Delete", new { id = item.id_turma }, new { id = "showDeleteTurma", data_target = "#deleteTurmaModal", @class = "delete", data_toggle = "modal" })<a><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-						</td>
-					</tr>
+				<tr>
+					<td class="col-sm-1">
+						<span class="custom-checkbox">
+							<input type="checkbox" id="checkboxes" name="optionsTurma[]" class="checkboxes" value="@item.id_turma">
+							<label for="checkboxes"></label>
+						</span>
+					</td>
+					<td class="col-sm-3">
+						@Html.DisplayFor(modalItem => item.Escola.nome_escola)
+					</td>
+					<td class="col-sm-3">
+						@Html.DisplayFor(modelItem => item.nome_turma)
+					</td>
+					<td class="col-sm-3">
+						@Html.DisplayFor(modelItem => item.Quantidade_Alunos)
+					</td>
+					<td class="col-sm-3">
+						@Html.DisplayFor(modelItem => item.Quantidade_Professores)
+					</td>
+					<td class="col-sm-2">
+						@*<a id="showEdit" href="#editEmployeeModal" data-toggle="modal" class="edit" ></a>*@
+						@Html.ActionLink("Editar", "Edit", new { id = item.id_turma }, new { id = "showEditTurma", data_target = "#editTurmaModal", @class = "edit", data_toggle = "modal" })@*<a><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>*@
+						@Html.ActionLink("Excluir", "Delete", new { id = item.id_turma }, new { id = "showDeleteTurma", data_target = "#deleteTurmaModal", @class = "delete", data_toggle = "modal" })@*<a><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>*@
+					</td>
+				</tr>
 				}
 			</tbody>
 		</table>
-		@*<div class="clearfix">
-				<div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-				<ul class="pagination">
-					<li class="page-item disabled"><a href="#">Previous</a></li>
-					<li class="page-item"><a href="#" class="page-link">1</a></li>
-					<li class="page-item"><a href="#" class="page-link">2</a></li>
-					<li class="page-item active"><a href="#" class="page-link">3</a></li>
-					<li class="page-item"><a href="#" class="page-link">4</a></li>
-					<li class="page-item"><a href="#" class="page-link">5</a></li>
-					<li class="page-item"><a href="#" class="page-link">Next</a></li>
-				</ul>
-			</div>*@
-		Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+		Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
 
 		@Html.PagedListPager(Model, page => Url.Action("Index",
 			new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
