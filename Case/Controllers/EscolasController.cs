@@ -6,7 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Case;
+using PagedList;
 
 namespace Case.Controllers
 {
@@ -14,42 +16,58 @@ namespace Case.Controllers
     {
         private Context db = new Context();
 
-        // GET: Escolas
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+			ViewBag.CurrentSort = sortOrder;
+			ViewBag.EscolaSort = String.IsNullOrEmpty(sortOrder) ? "id_escola" : "";
+
+			if (searchString != null)
+			{
+				page = 1;
+			}
+			else
+			{
+				searchString = currentFilter;
+			}
+
+			ViewBag.CurrentFilter = searchString;
+
+			var escola = from s in db.Escola
+						select s;
+			if (!String.IsNullOrEmpty(searchString))
+			{
+				escola = escola.Where(s => s.nome_escola.Contains(searchString));
+			}
+			switch (sortOrder)
+			{
+				case "nome_escola":
+					escola = escola.OrderByDescending(s => s.nome_escola);
+					break;
+				default:  // Name ascending 
+					escola = escola.OrderBy(s => s.id_escola);
+					break;
+			}
+
+			int pageSize = 5;
+			int pageNumber = (page ?? 1);
+
 			var esc = new Escola();
 			ViewBag.Escola = esc;
 			ViewData["Escola"] = esc;
-            return View(db.Escola.ToList());
+            return View(escola.ToPagedList(pageNumber, pageSize));
         }
 
-        // GET: Escolas/Details/5
-        public ActionResult Details(int? id)
+
+		[HttpGet]
+		public ActionResult Create()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Escola escola = db.Escola.Find(id);
-            if (escola == null)
-            {
-                return HttpNotFound();
-            }
-            return View(escola);
-        }
+			var model = new Escola();
+			return PartialView(model);
+		}
 
-        // GET: Escolas/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Escolas/Create
-        // Para se proteger de mais ataques, ative as propriedades específicas a que você quer se conectar. Para 
-        // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "nome_escola")] Escola escola)
+        public ActionResult Create([Bind(Include = "id_escola, nome_escola")] Escola escola)
         {
             if (ModelState.IsValid)
             {
@@ -61,30 +79,25 @@ namespace Case.Controllers
             return View(escola);
         }
 
-		// GET: Escolas/Edit/5
 		[HttpGet]
 		public ActionResult Edit(int? id)
         {
-			var model = new Escola();
-			return PartialView(model);
-			//if (id == null)
-			//{
-			//    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-			//}
-			//Escola escola = db.Escola.Find(id);
-			//if (escola == null)
-			//{
-			//    return HttpNotFound();
-			//}
-			//return View(escola);
+
+			if (id == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+			Escola escola = db.Escola.Find(id);
+			if (escola == null)
+			{
+				return HttpNotFound();
+			}
+			return PartialView(escola);
 		}
 
-        // POST: Escolas/Edit/5
-        // Para se proteger de mais ataques, ative as propriedades específicas a que você quer se conectar. Para 
-        // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "nome_escola")] Escola escola)
+        public ActionResult Edit([Bind(Include = "id_escola, nome_escola")] Escola escola)
         {
             if (ModelState.IsValid)
             {
@@ -95,7 +108,6 @@ namespace Case.Controllers
             return View(escola);
         }
 
-        // GET: Escolas/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -107,7 +119,7 @@ namespace Case.Controllers
             {
                 return HttpNotFound();
             }
-            return View(escola);
+            return PartialView(escola);
         }
 
         // POST: Escolas/Delete/5
@@ -121,7 +133,34 @@ namespace Case.Controllers
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+		[HttpPost]
+		public ActionResult MultipleDelete(string dataJson)
+		{
+			try
+			{
+				var listId = new JavaScriptSerializer().Deserialize<List<int>>(dataJson);
+				if (listId.Count == 0)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				foreach (var item in listId)
+				{
+					Escola escola = db.Escola.Find(item);
+					db.Escola.Remove(escola);
+				}
+
+				db.SaveChanges();
+				return RedirectToAction("Index", "Escolas");
+				//return Json(new { success = true, JsonRequestBehavior.AllowGet });
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			
+		}
+
+		protected override void Dispose(bool disposing)
         {
             if (disposing)
             {

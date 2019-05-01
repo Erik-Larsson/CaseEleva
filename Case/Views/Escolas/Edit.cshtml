@@ -1,11 +1,7 @@
 ﻿@model Case.Escola
 
-@{
-    ViewBag.Title = "Editar Escola";
-}
 
-<div id="editEmployeeModal" class="modal fade">
-	<div class="modal-dialog">
+	<div class="modal-dialog" style="margin:auto;">
 		<div class="modal-content">
 			@using (Html.BeginForm())
 			{
@@ -19,7 +15,7 @@
 				<div class="modal-body">
 					<div class="form-group">
 						@Html.LabelFor(model => model.nome_escola, htmlAttributes: new { @class = "control-label col-md-2" })
-						@Html.EditorFor(model => model.nome_escola, new { htmlAttributes = new { @class = "form-control" } })
+						@Html.EditorFor(model => model.nome_escola, new { htmlAttributes = new { @class = "form-control" }, required = "required", placeholder = "Nome" })
 						@Html.ValidationMessageFor(model => model.nome_escola, "", new { @class = "text-danger" })
 					</div>
 				</div>
@@ -30,12 +26,8 @@
 			}
 		</div>
 	</div>
-</div>
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+	@Scripts.Render("~/bundles/jqueryval");
+
 }

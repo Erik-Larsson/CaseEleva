@@ -6,85 +6,149 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>@ViewBag.Title Eleva</title>
 	@Styles.Render("~/Content/css")
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+	<!-- Bootstrap CSS CDN -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<!-- Scrollbar Custom CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 	@Scripts.Render("~/bundles/modernizr")
-	<!-- Polyfill(s) for older browsers -->
-	<script src="/node_modules/core-js/client/shim.min.js"></script>
-
-	<script src="/node_modules/zone.js/dist/zone.js"></script>
-	<script src="/node_modules/systemjs/dist/system.src.js"></script>
-
-	<script src="/systemjs.config.js"></script>
-	<script>
-		System.import('app/main.js').catch(function (err) { console.error(err); });
-
-	</script>
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-		   $('#showEdit').click(function() {
-			   var url = $('#editModal').data('url');
-
-				$.get(url, function(data) {
-					$('#editContainer').html(data);
-
-					$('#editModal').modal('show');
-				});
-		   });
-		});
-		$(document).ready(function () {
-			// Activate tooltip
-			$('[data-toggle="tooltip"]').tooltip();
-
-			// Select/Deselect checkboxes
-			var checkbox = $('table tbody input[type="checkbox"]');
-			$("#selectAll").click(function () {
-				if (this.checked) {
-					checkbox.each(function () {
-						this.checked = true;
-					});
-				} else {
-					checkbox.each(function () {
-						this.checked = false;
-					});
-				}
-			});
-			checkbox.click(function () {
-				if (!this.checked) {
-					$("#selectAll").prop("checked", false);
-				}
-			});
-		});
-	</script>
-</head>
-<body>
-	<div class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				@Html.ActionLink("Controle de Turmas e Escolas", "Index", "Escolas", new { area = "" }, new { @class = "navbar-brand" })
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li>@Html.ActionLink("Escolas", "Index", "Escolas")</li>
-					<li>@Html.ActionLink("Turmas", "Index", "Turmas")</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-	<div class="container body-content">
-		@RenderBody()
-		<hr />
-		<footer>
-			<p>@DateTime.Now.Year - Case Eleva</p>
-		</footer>
-	</div>
-
 	@Scripts.Render("~/bundles/jquery")
 	@Scripts.Render("~/bundles/bootstrap")
 	@RenderSection("scripts", required: false)
+
+	<!-- Polyfill(s) for older browsers -->
+	<script src="/node_modules/core-js/client/shim.min.js"></script>
+	<script src="/node_modules/zone.js/dist/zone.js"></script>
+	<script src="/node_modules/systemjs/dist/system.src.js"></script>
+	<script src="/systemjs.config.js"></script>
+
+	<script>
+		System.import('app/main.js').catch(function (err) { console.error(err); });
+	</script>
+</head>
+<body>
+	<div class="wrapper">
+		<nav id="sidebar">
+			<div id="dismiss">
+				<i class="glyphicon glyphicon-arrow-left"></i>
+			</div>
+
+			<div class="sidebar-header">
+				<h3>Escola Eleva</h3>
+			</div>
+
+			<ul class="list-unstyled components">
+				<p>Opções de Cadastro</p>
+				<li class="active">
+					@Html.ActionLink("Escolas", "Index", "Escolas")
+				</li>
+				<li class="active">
+					@Html.ActionLink("Turmas", "Index", "Turmas")
+				</li>				
+			</ul>
+		</nav>
+		<div id="content">
+			<nav class="navbar navbar-default">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+							<i class="glyphicon glyphicon-align-left"></i>
+							<span>Menu</span>
+						</button>
+					</div>				
+				</div>
+			</nav>
+			@RenderBody()
+		</div>
+	</div>
+	<div class="overlay"></div>
 </body>
 </html>
+
+<!-- jQuery Custom Scroller CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#sidebar").mCustomScrollbar({
+			theme: "minimal"
+		});
+
+		$('#dismiss, .overlay').on('click', function () {
+			$('#sidebar').removeClass('active');
+			$('.overlay').fadeOut();
+		});
+
+		$('#sidebarCollapse').on('click', function () {
+			$('#sidebar').addClass('active');
+			$('.overlay').fadeIn();
+			$('.collapse.in').toggleClass('in');
+			$('a[aria-expanded=true]').attr('aria-expanded', 'false');
+		});
+	});
+	$(document).ready(function () {
+		// Activate tooltip
+		$('[data-toggle="tooltip"]').tooltip();
+
+		// Select/Deselect checkboxes
+		var checkbox = $('table tbody input[type="checkbox"]');
+		$("#selectAll").click(function () {
+			if (this.checked) {
+				checkbox.each(function () {
+					this.checked = true;
+				});
+			} else {
+				checkbox.each(function () {
+					this.checked = false;
+				});
+			}
+		});
+		checkbox.click(function () {
+			if (!this.checked) {
+				$("#selectAll").prop("checked", false);
+			}
+		});
+
+		var selecionadosTurma = $("#showDeleteListTurma");
+		selecionadosTurma.click(function () {
+			var valuesTurma = []
+			$("input[name='optionsTurma[]']:checked").each(function () {
+				valuesTurma.push(parseInt($(this).val()+","));
+			});
+
+			$.ajax({
+				type: 'POST',
+				url: '@Url.Content("~/Turmas/MultipleDelete")',
+				dataType: 'JSON',
+				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				data: { dataJson: JSON.stringify(valuesTurma) },
+				success: setTimeout(function () {
+					location.reload();
+				})
+			});
+		});
+
+		var selecionadosEscola = $("#showDeleteListEscola");
+		selecionadosEscola.click(function () {
+			var valuesEscola = []
+			$("input[name='optionsEscola[]']:checked").each(function () {
+				valuesEscola.push(parseInt($(this).val()+","));
+			});
+
+			$.ajax({
+				type: 'POST',
+				url: '@Url.Content("~/Escolas/MultipleDelete")',
+				dataType: 'JSON',
+				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				data: { dataJson: JSON.stringify(valuesEscola) },
+				success: setTimeout(function () {
+					alert('Success');
+					location.reload();
+				})
+			});
+		});
+	});
+</script>

@@ -6,7 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Case;
+using PagedList;
 
 namespace Case.Controllers
 {
@@ -15,40 +17,61 @@ namespace Case.Controllers
         private Context db = new Context();
 
         // GET: Turmas
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var turma = db.Turma.Include(t => t.Escola);
-            return View(turma.ToList());
-        }
+			ViewBag.CurrentSort = sortOrder;
+			ViewBag.TurmaSort = String.IsNullOrEmpty(sortOrder) ? "id_escola" : "";
+			ViewBag.EscolaSort = String.IsNullOrEmpty(sortOrder) ? "nome_escola" : "";
 
-        // GET: Turmas/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Turma turma = db.Turma.Find(id);
-            if (turma == null)
-            {
-                return HttpNotFound();
-            }
-            return View(turma);
-        }
+			if (searchString != null)
+			{
+				page = 1;
+			}
+			else
+			{
+				searchString = currentFilter;
+			}
 
-        // GET: Turmas/Create
+			ViewBag.CurrentFilter = searchString;
+
+			var turma = from s in db.Turma
+						select s;
+			if (!String.IsNullOrEmpty(searchString))
+			{
+				turma = turma.Where(s => s.nome_turma.Contains(searchString));
+			}
+			switch (sortOrder)
+			{
+				case "nome_escola":
+					turma = turma.OrderByDescending(s => s.nome_turma);
+					break;
+				case "id_escola":
+					turma = turma.OrderByDescending(s => s.Escola.nome_escola);
+					break;
+				default:  // Name ascending 
+					turma = turma.OrderBy(s => s.id_turma);
+					break;
+			}
+
+			int pageSize = 5;
+			int pageNumber = (page ?? 1);
+
+			ViewData["Turma"] = turma;
+			ViewData["emptyTurma"] = new Turma();
+			ViewData["id_escola"] = new SelectList(db.Escola, "id_escola", "nome_escola");
+			return View(turma.ToPagedList(pageNumber,pageSize));
+		}
+
+
         public ActionResult Create()
         {
-            ViewBag.id_escola = new SelectList(db.Escola, "id_escola", "nome_escola");
-            return View();
+			ViewBag.id_escola = new SelectList(db.Escola, "id_escola", "nome_escola");
+			return PartialView();
         }
 
-        // POST: Turmas/Create
-        // Para se proteger de mais ataques, ative as propriedades específicas a que você quer se conectar. Para 
-        // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id_escola,nome_turma")] Turma turma)
+        public ActionResult Create([Bind(Include = "id_turma, id_escola,nome_turma")] Turma turma)
         {
             if (ModelState.IsValid)
             {
@@ -61,7 +84,6 @@ namespace Case.Controllers
             return View(turma);
         }
 
-        // GET: Turmas/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -74,15 +96,12 @@ namespace Case.Controllers
                 return HttpNotFound();
             }
             ViewBag.id_escola = new SelectList(db.Escola, "id_escola", "nome_escola", turma.id_escola);
-            return View(turma);
-        }
+			return PartialView(turma);
+		}
 
-        // POST: Turmas/Edit/5
-        // Para se proteger de mais ataques, ative as propriedades específicas a que você quer se conectar. Para 
-        // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id_escola,nome_turma")] Turma turma)
+        public ActionResult Edit([Bind(Include = "id_turma,id_escola,nome_turma")] Turma turma)
         {
             if (ModelState.IsValid)
             {
@@ -91,11 +110,39 @@ namespace Case.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.id_escola = new SelectList(db.Escola, "id_escola", "nome_escola", turma.id_escola);
-            return View(turma);
+            return PartialView(turma);
         }
 
-        // GET: Turmas/Delete/5
-        public ActionResult Delete(int? id)
+		
+
+		[HttpPost]
+		public ActionResult MultipleDelete(string dataJson)
+		{
+			try
+			{
+				var listId = new JavaScriptSerializer().Deserialize<List<int>>(dataJson);
+				if (listId.Count == 0)
+				{
+					//return Json(new { success = false, JsonRequestBehavior.AllowGet });
+				}
+				foreach (var item in listId)
+				{
+					Turma turma = db.Turma.Find(item);
+					db.Turma.Remove(turma);
+				}
+
+				db.SaveChanges();
+				return RedirectToAction("Index", "Turmas");
+				//return Json(new { success = true, JsonRequestBehavior.AllowGet });
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			
+		}
+
+		public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -106,10 +153,9 @@ namespace Case.Controllers
             {
                 return HttpNotFound();
             }
-            return View(turma);
+            return PartialView(turma);
         }
 
-        // POST: Turmas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

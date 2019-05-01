@@ -11,7 +11,7 @@ namespace Case
     public partial class Turma
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id_turma { get; set; }
 
 		[DisplayName("Escola")]

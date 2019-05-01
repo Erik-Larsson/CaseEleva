@@ -18,7 +18,7 @@ namespace Case
         }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id_escola { get; set; }
 
         [StringLength(200)]

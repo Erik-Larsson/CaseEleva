@@ -1,39 +1,106 @@
-﻿@model IEnumerable<Case.Turma>
-
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<Case.Turma>
 @{
-    ViewBag.Title = "Turmas";
+	ViewBag.Title = "Turmas";
+	var emptyTurma = ViewData["emptyTurma"] as Turma;
 }
 
-<h2>Turmas</h2>
+<div class="container">
+	<div class="table-wrapper">
+		<div class="table-title">
+			<div class="row">
+				<div class="col-sm-6">
+					<h2>Gerenciar <b>Turmas</b></h2>
+				</div>
+				<div class="col-sm-6">
+					@Html.ActionLink("Adicionar Turma", "Create", null, new { id = "showCreateTurma", data_target = "#addEscolaModal", @class = "create btn btn-success", data_toggle = "modal" })
+					<button id="showDeleteListTurma" class="btn btn-danger">Excluir</button>
+					@*@Html.ActionLink("Excluir Selecionados", "MultipleDelete", null, new { id = "showDeleteListTurma", data_target = "#multipleDeleteEmployeeModal", @class = "delete btn btn-danger", data_toggle = "modal" })*@
+				</div>
+			</div>
+		</div>
+		<table class="table table-striped table-hover">
+			@using (Html.BeginForm("Index", "Turmas", FormMethod.Get))
+			{
+				<p>
+					Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+					<input type="submit" value="Search" />
+				</p>
+			}
+			<thead>
+				<tr>
+					<th class="col-sm-2">
+						<span class="custom-checkbox">
+							<input type="checkbox" id="selectAll">
+							<label for="selectAll"></label>
+						</span>
+					</th>
+					<th class="col-sm-4">
+						@Html.ActionLink("Turma", "Index", new { sortOrder = ViewBag.TurmaSort, currentFilter = ViewBag.CurrentFilter })
+					</th>
+					<th class="col-sm-4">
+						@Html.ActionLink("Escola", "Index", new { sortOrder = ViewBag.EscolaSort, currentFilter = ViewBag.CurrentFilter })
+					</th>
+					<th class="col-sm-1"><a href="#">Actions</a></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td class="col-sm-1">
+							<span class="custom-checkbox">
+								<input type="checkbox" id="checkboxes" name="optionsTurma[]" class="checkboxes" value="@item.id_turma">
+								<label for="checkboxes"></label>
+							</span>
+						</td>
+						<td class="col-sm-4">
+							@Html.DisplayFor(modalItem => item.Escola.nome_escola)
+						</td>
+						<td class="col-sm-4">
+							@Html.DisplayFor(modelItem => item.nome_turma)
+						</td>
+						<td class="col-sm-2">
+							@*<a id="showEdit" href="#editEmployeeModal" data-toggle="modal" class="edit" ></a>*@
+							@Html.ActionLink("Editar", "Edit", new { id = item.id_turma }, new { id = "showEditTurma", data_target = "#editTurmaModal", @class = "edit", data_toggle = "modal" })<a><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+							@Html.ActionLink("Excluir", "Delete", new { id = item.id_turma }, new { id = "showDeleteTurma", data_target = "#deleteTurmaModal", @class = "delete", data_toggle = "modal" })<a><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+		@*<div class="clearfix">
+				<div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+				<ul class="pagination">
+					<li class="page-item disabled"><a href="#">Previous</a></li>
+					<li class="page-item"><a href="#" class="page-link">1</a></li>
+					<li class="page-item"><a href="#" class="page-link">2</a></li>
+					<li class="page-item active"><a href="#" class="page-link">3</a></li>
+					<li class="page-item"><a href="#" class="page-link">4</a></li>
+					<li class="page-item"><a href="#" class="page-link">5</a></li>
+					<li class="page-item"><a href="#" class="page-link">Next</a></li>
+				</ul>
+			</div>*@
+		Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-<p>
-    @Html.ActionLink("Criar Turma", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Escola.nome_escola)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.nome_turma)
-        </th>
-        <th></th>
-    </tr>
+		@Html.PagedListPager(Model, page => Url.Action("Index",
+			new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+	</div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Escola.nome_escola)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.nome_turma)
-        </td>
-        <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.id_turma }) |
-            @Html.ActionLink("Detalhes", "Details", new { id=item.id_turma }) |
-            @Html.ActionLink("Excluir", "Delete", new { id=item.id_turma })
-        </td>
-    </tr>
-}
+	<!-- Create Modal HTML -->
+	<div id='addTurmaModal' class='modal fade'>
+		@Html.Partial("~/Views/Turmas/Create.cshtml", emptyTurma)
+	</div>
+	<!-- Edit Modal HTML -->
+	<div id='editTurmaModal' class='modal fade'>
+		@Html.Partial("~/Views/Turmas/Edit.cshtml", emptyTurma)
+	</div>
+	<!-- Delete Modal HTML -->
+	<div id="deleteTurmaModal" class="modal fade">
+		@Html.Partial("~/Views/Turmas/Delete.cshtml", emptyTurma)
+	</div>
+</div>
 
-</table>
+
+
+
