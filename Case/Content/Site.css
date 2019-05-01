@@ -495,3 +495,6 @@ a.article, a.article:hover {
 	top: 0;
 	right: 0;
 }
+table {
+	overflow-x: auto;
+}

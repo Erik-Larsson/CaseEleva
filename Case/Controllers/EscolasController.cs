@@ -142,11 +142,18 @@ namespace Case.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Escola escola = db.Escola.Find(id);
-            db.Escola.Remove(escola);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+			try
+			{
+				Escola escola = db.Escola.Find(id);
+				db.Escola.Remove(escola);
+				db.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+			return RedirectToAction("Index");
+		}
 
 		[HttpPost]
 		public ActionResult MultipleDelete(string dataJson)
@@ -170,7 +177,7 @@ namespace Case.Controllers
 			}
 			catch (Exception ex)
 			{
-				throw ex;
+				return RedirectToAction("Index", "Escolas");
 			}
 			
 		}

@@ -18,68 +18,69 @@
 				</div>
 			</div>
 		</div>
-		<table class="table table-striped table-hover">
-			@using (Html.BeginForm("Index", "Turmas", FormMethod.Get))
-			{
-				<p>
-					Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
-					<input type="submit" value="Search" />
-				</p>
-			}
-			<thead>
-				<tr>
-					<th class="col-sm-2">
-						<span class="custom-checkbox">
-							<input type="checkbox" id="selectAll">
-							<label for="selectAll"></label>
-						</span>
-					</th>
-					<th class="col-sm-3">
-						@Html.ActionLink("Turma", "Index", new { sortOrder = ViewBag.TurmaSort, currentFilter = ViewBag.CurrentFilter })
-					</th>
-					<th class="col-sm-3">
-						@Html.ActionLink("Escola", "Index", new { sortOrder = ViewBag.EscolaSort, currentFilter = ViewBag.CurrentFilter })
-					</th>
-					<th class="col-sm-3">
-						@Html.ActionLink("Quantidade Alunos", "Index", new { sortOrder = ViewBag.QtdAlunosSort, currentFilter = ViewBag.CurrentFilter })
-					</th>
-					<th class="col-sm-3">
-						@Html.ActionLink("Quantidade Professores", "Index", new { sortOrder = ViewBag.QtdProfessoresSort, currentFilter = ViewBag.CurrentFilter })
-					</th>
-					<th class="col-sm-2"><a href="#">Actions</a></th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var item in Model)
+		<div style="overflow-x:auto;">
+			<table class="table table-striped table-hover">
+				@using (Html.BeginForm("Index", "Turmas", FormMethod.Get))
 				{
-				<tr>
-					<td class="col-sm-1">
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkboxes" name="optionsTurma[]" class="checkboxes" value="@item.id_turma">
-							<label for="checkboxes"></label>
-						</span>
-					</td>
-					<td class="col-sm-3">
-						@Html.DisplayFor(modalItem => item.Escola.nome_escola)
-					</td>
-					<td class="col-sm-3">
-						@Html.DisplayFor(modelItem => item.nome_turma)
-					</td>
-					<td class="col-sm-3">
-						@Html.DisplayFor(modelItem => item.Quantidade_Alunos)
-					</td>
-					<td class="col-sm-3">
-						@Html.DisplayFor(modelItem => item.Quantidade_Professores)
-					</td>
-					<td class="col-sm-2">
-						@*<a id="showEdit" href="#editEmployeeModal" data-toggle="modal" class="edit" ></a>*@
-						@Html.ActionLink("Editar", "Edit", new { id = item.id_turma }, new { id = "showEditTurma", data_target = "#editTurmaModal", @class = "edit", data_toggle = "modal" })@*<a><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>*@
-						@Html.ActionLink("Excluir", "Delete", new { id = item.id_turma }, new { id = "showDeleteTurma", data_target = "#deleteTurmaModal", @class = "delete", data_toggle = "modal" })@*<a><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>*@
-					</td>
-				</tr>
+					<p>
+						Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+						<input type="submit" value="Search" class="btn-info" />
+					</p>
 				}
-			</tbody>
-		</table>
+				<thead>
+					<tr>
+						<th class="col-sm-1">
+							<span class="custom-checkbox">
+								<input type="checkbox" id="selectAll">
+								<label for="selectAll"></label>
+							</span>
+						</th>
+						<th class="col-sm-2">
+							@Html.ActionLink("Turma", "Index", new { sortOrder = ViewBag.TurmaSort, currentFilter = ViewBag.CurrentFilter })
+						</th>
+						<th class="col-sm-2">
+							@Html.ActionLink("Escola", "Index", new { sortOrder = ViewBag.EscolaSort, currentFilter = ViewBag.CurrentFilter })
+						</th>
+						<th class="col-sm-2">
+							@Html.ActionLink("Quantidade Alunos", "Index", new { sortOrder = ViewBag.QtdAlunosSort, currentFilter = ViewBag.CurrentFilter })
+						</th>
+						<th class="col-sm-3">
+							@Html.ActionLink("Quantidade Professores", "Index", new { sortOrder = ViewBag.QtdProfessoresSort, currentFilter = ViewBag.CurrentFilter })
+						</th>
+						<th class="col-sm-1"><a href="#">Actions</a></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model)
+					{
+						<tr>
+							<td class="col-sm-1">
+								<span class="custom-checkbox">
+									<input type="checkbox" id="checkboxes" name="optionsTurma[]" class="checkboxes" value="@item.id_turma">
+									<label for="checkboxes"></label>
+								</span>
+							</td>
+							<td class="col-sm-2">
+								@Html.DisplayFor(modalItem => item.Escola.nome_escola)
+							</td>
+							<td class="col-sm-2">
+								@Html.DisplayFor(modelItem => item.nome_turma)
+							</td>
+							<td class="col-sm-2">
+								@Html.DisplayFor(modelItem => item.Quantidade_Alunos)
+							</td>
+							<td class="col-sm-3">
+								@Html.DisplayFor(modelItem => item.Quantidade_Professores)
+							</td>
+							<td class="col-sm-1">
+								@Html.ActionLink("Editar", "Edit", new { id = item.id_turma }, new { id = "showEditTurma", data_target = "#editTurmaModal", @class = "edit", data_toggle = "modal" })@*<a><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>*@
+								@Html.ActionLink("Excluir", "Delete", new { id = item.id_turma }, new { id = "showDeleteTurma", data_target = "#deleteTurmaModal", @class = "delete", data_toggle = "modal" })@*<a><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>*@
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
 		Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
 
 		@Html.PagedListPager(Model, page => Url.Action("Index",
@@ -97,6 +98,20 @@
 	<!-- Delete Modal HTML -->
 	<div id="deleteTurmaModal" class="modal fade">
 		@Html.Partial("~/Views/Turmas/Delete.cshtml", emptyTurma)
+	</div>
+	<div id='errorModal' class='modal fade'>
+		<div class="modal-dialog" style="margin:auto;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Erro</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<p>Erro ao excluir.</p>
+					@*<p class="text-warning"><small>Erro ao excluir.</small></p>*@
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 

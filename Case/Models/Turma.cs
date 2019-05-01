@@ -24,7 +24,7 @@ namespace Case
 		[DisplayName("Alunos")]
 		public int? Quantidade_Alunos { get; set; }
 
-		[DisplayName("Professores")]
+		[DisplayName("Quantidade de Professores")]
 		public int? Quantidade_Professores { get; set; }
 
 		public virtual Escola Escola { get; set; }

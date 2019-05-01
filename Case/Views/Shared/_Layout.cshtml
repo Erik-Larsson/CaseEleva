@@ -146,6 +146,9 @@
 				data: { dataJson: JSON.stringify(valuesTurma) },
 				success: setTimeout(function () {
 					location.reload();
+				}),
+				error: $('#errorModal').modal({
+					show: 'false'
 				})
 			});
 		});
@@ -165,6 +168,9 @@
 				data: { dataJson: JSON.stringify(valuesEscola) },
 				success: setTimeout(function () {
 					location.reload();
+				}),
+				error: $('#errorModal').modal({
+					show: 'false'
 				})
 			});
 		});
