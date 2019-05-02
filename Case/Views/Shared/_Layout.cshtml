@@ -137,8 +137,14 @@
 			$("input[name='optionsTurma[]']:checked").each(function () {
 				valuesTurma.push(parseInt($(this).val()+","));
 			});
-			
-			$.ajax({
+			if (valuesTurma == '')
+			{
+				$('#checkTurmas').modal({
+					show: 'true'
+				});
+			}else
+			{
+				$.ajax({
 				type: 'POST',
 				url: '@Url.Content("~/Turmas/MultipleDelete")',
 				dataType: 'JSON',
@@ -155,6 +161,7 @@
 					}
 				})
 			});
+			}			
 		});
 
 		var selecionadosEscola = $("#showDeleteListEscola");
@@ -163,27 +170,35 @@
 			$("input[name='optionsEscola[]']:checked").each(function () {
 				valuesEscola.push(parseInt($(this).val()+","));
 			});
-			if (confirm('Você deseja excluir o(s) registros selecionados'))
+			if (valuesEscola == '') {
+				$('#checkEscolas').modal({
+					show: 'true'
+				});
+			} else
 			{
-				$.ajax({
-				type: 'POST',
-				url: '@Url.Content("~/Escolas/MultipleDelete")',
-				dataType: 'JSON',
-				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-				data: { dataJson: JSON.stringify(valuesEscola) },
-					success: (function (data) {
-						console.log(data);
-					if (data.retorno == false) {
-						$('#multipleDeleteEscolaModal').modal({
-							show: 'true'
-						});
-					} else {
-						window.location.reload();
-					}
+				if (confirm('Você deseja excluir o(s) registros selecionados'))
+				{
+					$.ajax({
+					type: 'POST',
+					url: '@Url.Content("~/Escolas/MultipleDelete")',
+					dataType: 'JSON',
+					contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+					data: { dataJson: JSON.stringify(valuesEscola) },
+						success: (function (data) {
+							console.log(data);
+						if (data.retorno == false) {
+							$('#multipleDeleteEscolaModal').modal({
+								show: 'true'
+							});
+						} else {
+							window.location.reload();
+						}
 					
-				})
-			});
+					})
+				});
+				}
 			}
+		
 			
 		});
 	});

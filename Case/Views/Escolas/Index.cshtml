@@ -111,12 +111,11 @@
 		<div class="modal-dialog" style="margin:auto;">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Erro ao excluir Escola</h4>
+					<h4 class="modal-title">Erro!</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">
-					<p>Essa escola pertence alguma turma.</p>
-					<p>Exclua a(s) turma referente à essa escola.</p>
+					<p>Essa escola pertence à alguma turma.</p>
 				</div>
 				<div class="modal-footer">
 					<input type="button" class="btn btn-danger" data-dismiss="modal" value="Ok">
@@ -124,8 +123,23 @@
 			</div>
 		</div>
 	</div>
-
-
+	<!-- Error 2 Modal HTML -->
+	<div id="checkEscolas" class="modal fade">
+		<div class="modal-dialog" style="margin:auto;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Erro!</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<p>Selecione uma ou mais Escolas.</p>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-danger" data-dismiss="modal" value="Ok">
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 @section Scripts {
 	@Scripts.Render("~/bundles/jqueryval");
