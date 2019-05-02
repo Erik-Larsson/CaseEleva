@@ -25,40 +25,37 @@ namespace Case.Controllers
 			ViewBag.CidadeSort = String.IsNullOrEmpty(sortOrder) ? "cidade" : "";
 			ViewBag.EnderecoSort = String.IsNullOrEmpty(sortOrder) ? "endereco" : "";
 
-			if (searchString != null)
-			{
-				page = 1;
-			}
-			else
-			{
+			if (searchString != null)			
+				page = 1;			
+			else			
 				searchString = currentFilter;
-			}
+			
 
 			ViewBag.CurrentFilter = searchString;
 			var escola = from s in db.Escola
 						select s;
-			if (!String.IsNullOrEmpty(searchString))
-			{
+
+			if (!String.IsNullOrEmpty(searchString))			
 				escola = escola.Where(s => s.nome_escola.Contains(searchString));
-			}
+			
 			switch (sortOrder)
 			{
 				case "nome_escola":
-					escola = escola.OrderByDescending(s => s.nome_escola);
+					escola = escola.OrderBy(s => s.nome_escola);
 					break;
 				case "pais":
-					escola = escola.OrderByDescending(s => s.Pais);
+					escola = escola.OrderBy(s => s.Pais);
 					break;
 				case "estado":
-					escola = escola.OrderByDescending(s => s.Estado);
+					escola = escola.OrderBy(s => s.Estado);
 					break;
 				case "cidade":
-					escola = escola.OrderByDescending(s => s.Cidade);
+					escola = escola.OrderBy(s => s.Cidade);
 					break;
 				case "endereco":
-					escola = escola.OrderByDescending(s => s.Endereco);
+					escola = escola.OrderBy(s => s.Endereco);
 					break;
-				default:  // Name ascending 
+				default:  
 					escola = escola.OrderBy(s => s.id_escola);
 					break;
 			}
@@ -137,7 +134,7 @@ namespace Case.Controllers
             return PartialView(escola);
         }
 
-        // POST: Escolas/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -150,20 +147,20 @@ namespace Case.Controllers
 			}
 			catch (Exception ex)
 			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				return RedirectToAction("Index");
 			}
 			return RedirectToAction("Index");
 		}
 
 		[HttpPost]
-		public ActionResult MultipleDelete(string dataJson)
+		public JsonResult MultipleDelete(string dataJson)
 		{
 			try
 			{
 				var listId = new JavaScriptSerializer().Deserialize<List<int>>(dataJson);
 				if (listId.Count == 0)
 				{
-					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+					return Json(new { retorno = false, JsonRequestBehavior.AllowGet });
 				}
 				foreach (var item in listId)
 				{
@@ -172,14 +169,12 @@ namespace Case.Controllers
 				}
 
 				db.SaveChanges();
-				return RedirectToAction("Index", "Escolas");
-				//return Json(new { success = true, JsonRequestBehavior.AllowGet });
+				return Json(new { retorno = true, JsonRequestBehavior.AllowGet });
 			}
 			catch (Exception ex)
 			{
-				return RedirectToAction("Index", "Escolas");
-			}
-			
+				return Json(new { retorno = false, JsonRequestBehavior.AllowGet });
+			}			
 		}
 
 		protected override void Dispose(bool disposing)

@@ -16,47 +16,43 @@ namespace Case.Controllers
     {
         private Context db = new Context();
 
-        // GET: Turmas
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
 			ViewBag.CurrentSort = sortOrder;
 			ViewBag.TurmaSort = String.IsNullOrEmpty(sortOrder) ? "id_escola" : "";
 			ViewBag.EscolaSort = String.IsNullOrEmpty(sortOrder) ? "nome_escola" : "";
 			ViewBag.QtdAlunosSort = String.IsNullOrEmpty(sortOrder) ? "Quantidade_Alunos" : "";
-			ViewBag.QtdProfessores = String.IsNullOrEmpty(sortOrder) ? "QtdProfessoresSort" : "";
+			ViewBag.QtdProfessoresSort = String.IsNullOrEmpty(sortOrder) ? "Quantidade_Professores" : "";
 
 			if (searchString != null)
-			{
-				page = 1;
-			}
-			else
-			{
+				page = 1;			
+			else			
 				searchString = currentFilter;
-			}
+			
 
 			ViewBag.CurrentFilter = searchString;
 
 			var turma = from s in db.Turma
 						select s;
+
 			if (!String.IsNullOrEmpty(searchString))
-			{
 				turma = turma.Where(s => s.nome_turma.Contains(searchString));
-			}
+			
 			switch (sortOrder)
 			{
 				case "nome_escola":
-					turma = turma.OrderByDescending(s => s.nome_turma);
+					turma = turma.OrderBy(s => s.nome_turma);
 					break;
 				case "id_escola":
-					turma = turma.OrderByDescending(s => s.Escola.nome_escola);
+					turma = turma.OrderBy(s => s.Escola.nome_escola);
 					break;
 				case "Quantidade_Alunos":
-					turma = turma.OrderByDescending(s => s.Quantidade_Alunos);
+					turma = turma.OrderBy(s => s.Quantidade_Alunos);
 					break;
 				case "Quantidade_Professores":
-					turma = turma.OrderByDescending(s => s.Quantidade_Professores);
+					turma = turma.OrderBy(s => s.Quantidade_Professores);
 					break;
-				default:  // Name ascending 
+				default: 
 					turma = turma.OrderBy(s => s.id_turma);
 					break;
 			}
@@ -131,7 +127,7 @@ namespace Case.Controllers
 				var listId = new JavaScriptSerializer().Deserialize<List<int>>(dataJson);
 				if (listId.Count == 0)
 				{
-					//return Json(new { success = false, JsonRequestBehavior.AllowGet });
+					return Json(new { retorno = false, JsonRequestBehavior.AllowGet });
 				}
 				foreach (var item in listId)
 				{
@@ -140,38 +136,52 @@ namespace Case.Controllers
 				}
 
 				db.SaveChanges();
-				return RedirectToAction("Index", "Turmas");
-				//return Json(new { success = true, JsonRequestBehavior.AllowGet });
+				return Json(new { retorno = true, JsonRequestBehavior.AllowGet });
 			}
 			catch (Exception ex)
 			{
-				return RedirectToAction("Index", "Turmas");
+				return Json(new { retorno = false, JsonRequestBehavior.AllowGet });
 			}
 			
 		}
 
 		public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Turma turma = db.Turma.Find(id);
-            if (turma == null)
-            {
-                return HttpNotFound();
-            }
-            return PartialView(turma);
-        }
+			try
+			{ 
+				if (id == null)
+				{
+					return RedirectToAction("Index");
+				}
+				Turma turma = db.Turma.Find(id);
+				if (turma == null)
+				{
+					return HttpNotFound();
+				}
+				return PartialView(turma);
+			}
+			catch (Exception ex)
+			{
+				return RedirectToAction("Index");
+			}
+		}
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Turma turma = db.Turma.Find(id);
-            db.Turma.Remove(turma);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+			try
+			{
+				Turma turma = db.Turma.Find(id);
+				db.Turma.Remove(turma);
+				db.SaveChanges();
+				return RedirectToAction("Index");
+			}
+			catch (Exception ex)
+			{
+				return RedirectToAction("Index");
+			}
+			
         }
 
         protected override void Dispose(bool disposing)

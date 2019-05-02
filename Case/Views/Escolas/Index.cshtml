@@ -91,7 +91,7 @@
 		Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
 
 		@Html.PagedListPager(Model, page => Url.Action("Index",
-			new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+		 new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
 	</div>
 
 	<!-- Create Modal HTML -->
@@ -106,18 +106,29 @@
 	<div id="deleteEscolaModal" class="modal fade">
 		@Html.Partial("~/Views/Escolas/Delete.cshtml", esc)
 	</div>
-	<div id='errorModal' class='modal fade'>
+	<!-- Error Modal HTML -->
+	<div id="multipleDeleteEscolaModal" class="modal fade">
 		<div class="modal-dialog" style="margin:auto;">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Erro</h4>
+					<h4 class="modal-title">Erro ao excluir Escola</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">
-					<p>Erro ao excluir.</p>
-					@*<p class="text-warning"><small>Erro ao excluir.</small></p>*@
-				</div>		
+					<p>Essa escola pertence alguma turma.</p>
+					<p>Exclua a(s) turma referente à essa escola.</p>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-danger" data-dismiss="modal" value="Ok">
+				</div>
 			</div>
 		</div>
 	</div>
+
+
 </div>
+@section Scripts {
+	@Scripts.Render("~/bundles/jqueryval");
+
+}
+

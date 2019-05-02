@@ -137,18 +137,22 @@
 			$("input[name='optionsTurma[]']:checked").each(function () {
 				valuesTurma.push(parseInt($(this).val()+","));
 			});
-
+			
 			$.ajax({
 				type: 'POST',
 				url: '@Url.Content("~/Turmas/MultipleDelete")',
 				dataType: 'JSON',
 				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 				data: { dataJson: JSON.stringify(valuesTurma) },
-				success: setTimeout(function () {
-					location.reload();
-				}),
-				error: $('#errorModal').modal({
-					show: 'false'
+				success: (function (data) {
+					console.log(data);
+					if (data.retorno == false) {
+						$('#multipleDeleteTurmaModal').modal({
+							show: 'true'
+						});
+					} else {
+						window.location.reload();
+					}
 				})
 			});
 		});
@@ -159,20 +163,28 @@
 			$("input[name='optionsEscola[]']:checked").each(function () {
 				valuesEscola.push(parseInt($(this).val()+","));
 			});
-
-			$.ajax({
+			if (confirm('Você deseja excluir o(s) registros selecionados'))
+			{
+				$.ajax({
 				type: 'POST',
 				url: '@Url.Content("~/Escolas/MultipleDelete")',
 				dataType: 'JSON',
 				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 				data: { dataJson: JSON.stringify(valuesEscola) },
-				success: setTimeout(function () {
-					location.reload();
-				}),
-				error: $('#errorModal').modal({
-					show: 'false'
+					success: (function (data) {
+						console.log(data);
+					if (data.retorno == false) {
+						$('#multipleDeleteEscolaModal').modal({
+							show: 'true'
+						});
+					} else {
+						window.location.reload();
+					}
+					
 				})
 			});
+			}
+			
 		});
 	});
 </script>
